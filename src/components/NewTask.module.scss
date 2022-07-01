@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  top: -2rem;
+  top: -1.75rem;
   width: 100%;
   
 }
@@ -15,12 +15,20 @@
   border: none;
   border-radius: 0.5rem;
   padding: 1rem;
+  color: var(--gray-100);
 }
 
 .newTask button{
-  margin: 0.5rem;
+  margin-left: 0.5rem;
+  width: 5.625rem;
+  border-radius: 0.5rem;
   background-color: var(--blue-dark);
   padding: 1rem 0;
   border: none;
   color: var(--gray-100);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }

@@ -1,4 +1,5 @@
 import styles from './NewTask.module.scss'
+import plusIcon from '../assets/button-plus.svg'
 
 export function NewTask(){
   return(
@@ -8,7 +9,10 @@ export function NewTask(){
         placeholder="Adicione uma nova tarefa"
         className={styles.input}  
       />
-      <button>Criar</button>
+      <button>
+        <span>Criar</span> 
+        <img src={plusIcon} alt="" />
+      </button>
     </form>
   )
 }
