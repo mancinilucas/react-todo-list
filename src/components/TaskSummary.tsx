@@ -1,4 +1,7 @@
-import IconClipboard from '../assets/clipboard.svg'
+import { TaskCard } from './TaskCard'
+
+import clipboardIcon from '../assets/clipboard.svg'
+
 import styles from './TaskSummary.module.scss'
 
 
@@ -19,10 +22,14 @@ export function TaskSummary(){
       </div>
 
       <div className={styles.tasksSummary}>
-        <img src={IconClipboard} alt="" />
-        <strong>Você ainda não tem tarefas cadastradas</strong>
-        <p>Crie tarefas e organize seus itens a fazer</p>
+        <img src={clipboardIcon} alt="" />
+        <span><strong>Você ainda não tem tarefas cadastradas</strong>
+        <p>Crie tarefas e organize seus itens a fazer</p></span>
       </div>
+
+      <TaskCard isChecked taskTitle="Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer."/>
+      <TaskCard isChecked taskTitle="Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer."/>
+      <TaskCard isChecked taskTitle="Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer."/>
     </div>
   )
 }
