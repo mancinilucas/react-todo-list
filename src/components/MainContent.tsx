@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 import plusIcon from '../assets/button-plus.svg'
 import clipboardIcon from '../assets/clipboard.svg'
@@ -7,32 +7,35 @@ import trashIcon from '../assets/trash.svg'
 
 import styles from './MainContent.module.scss'
 
-interface Task {
+interface TaskProps {
   id: number;
   title: string;
-  isComplete: boolean;
+  isChecked: boolean;
 }
 
 export function MainContent(){
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [newTaskTitle, setNewTaskTitle] = useState('');
 
-  //Criar Task, capturar a mensagem e renderizar em tela
+  const [tasks, setTasks] = useState<TaskProps[]>([])
+  const [taskContent, setTaskContent] = useState('')
+
+  //Criar Task, capturar a mensagem
+  function handleNewCommentChange(event:ChangeEvent<HTMLInputElement>){
+    setTaskContent(event.target.value)    
+  }
+
+  function handleCreateTask(){
+    const task = {
+      id: Math.random(),
+      title: taskContent,
+      isChecked: false
+    }
+
+    setTasks([...tasks, task])
+  }
+ 
   //Crie uma nova task com um id random, não permita criar caso o título seja vazio.
 
-  function handleCreateNewTask() {
-    if(!newTaskTitle) return
-    
-    const newTask = {
-      id: Math.random(),
-      title: newTaskTitle,
-      isComplete: false
-    }
-    
-    setTasks(oldState => [...oldState, newTask])
-    
-    setNewTaskTitle('')
-  }
+  
 
   //Verificar se a task não está em branco
 
@@ -43,11 +46,7 @@ export function MainContent(){
 
 
   //Remover a task da lista
-  function handleRemoveTask(id:number) {
-    const filteredTasks = tasks.filter(task => task.id !== id)
 
-    setTasks(filteredTasks)
-  }
 
   return(
     <main>
@@ -57,10 +56,13 @@ export function MainContent(){
             type="text" 
             placeholder="Adicione uma nova tarefa"
             className={styles.input}
-            onChange={(event) => setNewTaskTitle(event.target.value)}
-            value={newTaskTitle}
+            onSubmit={handleNewCommentChange}
+            value={taskContent}
           />
-          <button type="submit" onClick={handleCreateNewTask}>
+          <button 
+            type="submit"
+            onClick={handleCreateTask}
+          >
             <span>Criar</span> 
             <img src={plusIcon} alt="" />
           </button>
@@ -86,19 +88,27 @@ export function MainContent(){
             <p>Crie tarefas e organize seus itens a fazer</p></span>
           </div>
 
-          {tasks.map(task =>{
-            return(
-              <div className={styles.newTaskContainer}>
-                <button type="button">
-                  <img src={notCheckedIcon} className={styles.icon} alt=""/>
-                </button>
-                <span><p>{task.title}</p></span>
-                <button type="button" onClick={() => handleRemoveTask(task.id)}>
-                  <img src={trashIcon} alt="" className={styles.icon}/>
-                </button>
-              </div>
-            )
-          })}
+          <div>
+            {tasks.map(task =>{
+              return(
+                <div key={task.id} className={styles.newTaskContainer}>
+                  <button type="button">
+                    <img src={notCheckedIcon} className={styles.icon} alt=""/>
+                  </button>
+                  <span><p>{task.title}</p></span>
+                  <button 
+                    type="button"
+                  >
+                    <img 
+                      src={trashIcon} 
+                      alt="" 
+                      className={styles.icon}
+                    />
+                  </button>
+                </div>
+              )
+            })}
+          </div>
 
         </div>
       </div>
