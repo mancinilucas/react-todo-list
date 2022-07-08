@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, MouseEvent, MouseEventHandler, useState } from 'react'
 
 import plusIcon from '../assets/button-plus.svg'
 import clipboardIcon from '../assets/clipboard.svg'
@@ -16,39 +16,50 @@ interface TaskProps {
 export function MainContent(){
 
   const [tasks, setTasks] = useState<TaskProps[]>([])
-  const [taskContent, setTaskContent] = useState('')
+  const [newTaskTitle, setNewTaskTitle] = useState('')
 
-  //Criar Task, capturar a mensagem
-  function handleNewCommentChange(event:ChangeEvent<HTMLInputElement>){
-    setTaskContent(event.target.value)    
-  }
+   
 
-  function handleCreateTask(){
-    const task = {
+  function handleCreateNewTask(e:FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>){
+    e.preventDefault();
+
+    if (!newTaskTitle) return
+
+    const newTask = {
       id: Math.random(),
-      title: taskContent,
+      title: newTaskTitle,
       isChecked: false
     }
 
-    setTasks([...tasks, task])
+    setTasks([...tasks, newTask])
+
+    setNewTaskTitle('')
   }
   
-  console.log(tasks)
+
+  function handleRemoveTask(id:number) {
+    const filteredTasks = tasks.filter(task => task.id !== id)
+
+
+    console.log(filteredTasks)
+    setTasks(filteredTasks)
+  }
+ 
 
 
   return(
     <main>
       <div className={styles.wrapper}>
-        <form action="" className={styles.newTask}>
+        <form action="" className={styles.newTask} onSubmit={handleCreateNewTask}>
           <input 
             type="text" 
             placeholder="Adicione uma nova tarefa"
             className={styles.input}
-            onSubmit={handleNewCommentChange}
+            onChange={(event) => setNewTaskTitle(event.target.value)}
+            value={newTaskTitle}
           />
           <button 
             type="submit"
-            onClick={handleCreateTask}
           >
             <span>Criar</span> 
             <img src={plusIcon} alt="" />
@@ -59,7 +70,7 @@ export function MainContent(){
           <div className={styles.summaryInfo}>
             <div className={styles.taskCreated}>
               <strong>Tarefas criadas</strong>
-              <span>0</span>
+              <span>{tasks.length}</span>
             </div>
 
             <div className={styles.taskDone}>
@@ -69,11 +80,11 @@ export function MainContent(){
 
            </div>
 
-          <div className={styles.tasksSummary}>
+          {tasks.length === 0 && <div className={styles.tasksSummary}>
             <img src={clipboardIcon} alt="" />
             <span><strong>Você ainda não tem tarefas cadastradas</strong>
             <p>Crie tarefas e organize seus itens a fazer</p></span>
-          </div>
+          </div>}
 
           <div>
             {tasks.map(task =>{
@@ -85,6 +96,7 @@ export function MainContent(){
                   <span><p>{task.title}</p></span>
                   <button 
                     type="button"
+                    onClick={() => {handleRemoveTask}}
                   >
                     <img 
                       src={trashIcon} 
