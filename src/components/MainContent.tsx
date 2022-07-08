@@ -32,20 +32,8 @@ export function MainContent(){
 
     setTasks([...tasks, task])
   }
- 
-  //Crie uma nova task com um id random, não permita criar caso o título seja vazio.
-
   
-
-  //Verificar se a task não está em branco
-
-
-
-  //Alternar se task está concluída ou não
-
-
-
-  //Remover a task da lista
+  console.log(tasks)
 
 
   return(
@@ -57,7 +45,6 @@ export function MainContent(){
             placeholder="Adicione uma nova tarefa"
             className={styles.input}
             onSubmit={handleNewCommentChange}
-            value={taskContent}
           />
           <button 
             type="submit"
