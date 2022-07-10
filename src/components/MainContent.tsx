@@ -1,24 +1,31 @@
-import { ChangeEvent, FormEvent, MouseEvent, MouseEventHandler, useState } from 'react'
+import { FormEvent, MouseEvent, useState } from 'react'
+import { v4 as uuid } from 'uuid';
 
 import plusIcon from '../assets/button-plus.svg'
 import clipboardIcon from '../assets/clipboard.svg'
 import notCheckedIcon from '../assets/check.svg'
+import taskCheckedIcon from '../assets/checked.svg'
 import trashIcon from '../assets/trash.svg'
 
 import styles from './MainContent.module.scss'
 
 interface TaskProps {
-  id: number;
+  id: string;
   title: string;
   isChecked: boolean;
 }
 
 export function MainContent(){
-
   const [tasks, setTasks] = useState<TaskProps[]>([])
   const [newTaskTitle, setNewTaskTitle] = useState('')
 
-   
+  const [taskCompleteCount, setTaskCompleteCount] = useState(0)
+
+  function updateTaskCount(){
+    const completedTasksCount = tasks.map(task => task.isChecked === true)
+
+    setTaskCompleteCount(completedTasksCount.length)
+  }
 
   function handleCreateNewTask(e:FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>){
     e.preventDefault();
@@ -26,7 +33,7 @@ export function MainContent(){
     if (!newTaskTitle) return
 
     const newTask = {
-      id: Math.random(),
+      id: uuid(),
       title: newTaskTitle,
       isChecked: false
     }
@@ -36,17 +43,27 @@ export function MainContent(){
     setNewTaskTitle('')
   }
   
-
-  function handleRemoveTask(id:number) {
+  function handleRemoveTask(id:string) {
     const filteredTasks = tasks.filter(task => task.id !== id)
 
-
-    console.log(filteredTasks)
     setTasks(filteredTasks)
+
+  }
+
+  function handleToggleTaskCompletion(id: string) {
+    const taskCompletion = tasks.map(task => task.id === id ? {
+      ...task,
+      isChecked: true,
+      
+    } : task,
+
+    )
+
+    updateTaskCount()
+    
+    setTasks(taskCompletion)
   }
  
-
-
   return(
     <main>
       <div className={styles.wrapper}>
@@ -75,7 +92,7 @@ export function MainContent(){
 
             <div className={styles.taskDone}>
               <strong>Concluídas</strong>
-              <span>0</span>
+              <span>{taskCompleteCount}</span>
             </div>
 
            </div>
@@ -90,13 +107,22 @@ export function MainContent(){
             {tasks.map(task =>{
               return(
                 <div key={task.id} className={styles.newTaskContainer}>
-                  <button type="button">
-                    <img src={notCheckedIcon} className={styles.icon} alt=""/>
-                  </button>
-                  <span><p>{task.title}</p></span>
                   <button 
                     type="button"
-                    onClick={() => {handleRemoveTask}}
+                    onClick={() => handleToggleTaskCompletion(task.id)}
+                  >
+                    {task.isChecked === false ? <img src={notCheckedIcon} className={styles.icon} alt=""/> : <img src={taskCheckedIcon} className={styles.icon} alt=""/>}
+                  </button>
+                  <span>
+                    {task.isChecked === true 
+                    ? <p className={styles.taskTitleLine}>{task.title}</p>
+                    : <p>{task.title}</p>
+                    }
+                  </span>
+                  <button
+                    className={styles.removeButton}
+                    type="button"
+                    onClick={() => handleRemoveTask(task.id)}
                   >
                     <img 
                       src={trashIcon} 
