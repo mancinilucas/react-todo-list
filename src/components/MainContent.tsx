@@ -21,10 +21,9 @@ export function MainContent(){
 
   const [taskCompleteCount, setTaskCompleteCount] = useState(0)
 
-  function updateTaskCount(){
-    const completedTasksCount = tasks.map(task => task.isChecked === true)
-
-    setTaskCompleteCount(completedTasksCount.length)
+  function updateTaskCompleteCount(){
+    const currentCount = taskCompleteCount
+    setTaskCompleteCount(currentCount + 1)
   }
 
   function handleCreateNewTask(e:FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>){
@@ -48,22 +47,19 @@ export function MainContent(){
 
     setTasks(filteredTasks)
 
+    setTaskCompleteCount(taskCompleteCount - 1)
+
   }
 
   function handleToggleTaskCompletion(id: string) {
-    const taskCompletion = tasks.map(task => task.id === id ? {
-      ...task,
-      isChecked: true,
-      
-    } : task,
-
+    const taskCompletion = tasks.map(task => task.id === id 
+      ? { ...task, isChecked: !task.isChecked, } 
+      : task
     )
-
-    updateTaskCount()
-    
     setTasks(taskCompletion)
+    updateTaskCompleteCount()
   }
- 
+  
   return(
     <main>
       <div className={styles.wrapper}>
