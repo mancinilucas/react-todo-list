@@ -18,12 +18,11 @@ interface TaskProps {
 export function MainContent(){
   const [tasks, setTasks] = useState<TaskProps[]>([])
   const [newTaskTitle, setNewTaskTitle] = useState('')
+  
+  function isCompletedCount(){
+    const isCompleted = tasks.filter(task => task.isChecked)
 
-  const [taskCompleteCount, setTaskCompleteCount] = useState(0)
-
-  function updateTaskCompleteCount(){
-    const currentCount = taskCompleteCount
-    setTaskCompleteCount(currentCount + 1)
+    return isCompleted.length
   }
 
   function handleCreateNewTask(e:FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>){
@@ -46,9 +45,6 @@ export function MainContent(){
     const filteredTasks = tasks.filter(task => task.id !== id)
 
     setTasks(filteredTasks)
-
-    setTaskCompleteCount(taskCompleteCount - 1)
-
   }
 
   function handleToggleTaskCompletion(id: string) {
@@ -57,7 +53,6 @@ export function MainContent(){
       : task
     )
     setTasks(taskCompletion)
-    updateTaskCompleteCount()
   }
   
   return(
@@ -88,7 +83,7 @@ export function MainContent(){
 
             <div className={styles.taskDone}>
               <strong>Concluídas</strong>
-              <span>{taskCompleteCount}</span>
+              <span>{isCompletedCount()}</span>
             </div>
 
            </div>
