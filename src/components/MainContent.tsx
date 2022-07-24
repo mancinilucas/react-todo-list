@@ -1,4 +1,4 @@
-import { FormEvent, MouseEvent, useState } from 'react'
+import { FormEvent, MouseEvent, useMemo, useState } from 'react'
 import { v4 as uuid } from 'uuid';
 
 import plusIcon from '../assets/button-plus.svg'
@@ -22,7 +22,9 @@ export function MainContent(){
   function isCompletedCount(){
     const isCompleted = tasks.filter(task => task.isChecked)
 
-    return isCompleted.length
+    const isCompletedCounter = useMemo(() => isCompleted.length,[isCompleted])
+    
+    return isCompletedCounter
   }
 
   function handleCreateNewTask(e:FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>){
